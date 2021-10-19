@@ -1,6 +1,14 @@
+<script setup>
+const config = useRuntimeConfig()
+
+const { supabaseUrl } = config
+
+console.log(config)
+</script>
+
 <template>
   <div>
-    <!-- Remove this component to get started! -->
-    <NuxtWelcome />
+    <h1>Nuxt 3 Supabase TodoMVC</h1>
+    <p>Supabase Url: {{ supabaseUrl }}</p>
   </div>
 </template>
