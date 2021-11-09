@@ -32,6 +32,20 @@ const addTask = async () => {
   }
 }
 
+const updateTaskCompletion = async task => {
+  try {
+    const { data, error } = await supabase
+      .from('todos')
+      .update({ is_complete: !task.is_complete })
+      .eq('id', task.id)
+    if (error) throw error
+    console.log(data)
+    getTasks()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 onMounted(() => {
   getTasks()
 })
@@ -43,7 +57,12 @@ onMounted(() => {
   <h2>List of Tasks</h2>
   <ul>
     <li v-for="(task, index) in taskList" :key="task.task + index">
-      <input type="checkbox" v-model="task.is_complete" /> {{ task.task }}
+      <input
+        type="checkbox"
+        v-model="task.is_complete"
+        @click="updateTaskCompletion(task)"
+      />
+      {{ task.task }}
     </li>
   </ul>
 </template>
