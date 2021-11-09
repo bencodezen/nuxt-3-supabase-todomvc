@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { createClient } from '@supabase/supabase-js/dist/main/index.js'
 import { store } from '../store.js'
 
@@ -10,9 +10,11 @@ const newTask = ref('')
 
 const taskList = ref([])
 
-let { data: todos, error } = await supabase.from('todos').select('*')
+const getTasks = async () => {
+  let { data: todos, error } = await supabase.from('todos').select('*')
 
-taskList.value = todos
+  taskList.value = todos
+}
 
 const addTask = async () => {
   try {
@@ -24,11 +26,15 @@ const addTask = async () => {
       }
     ])
     if (error) throw error
-    console.log(data)
+    getTasks()
   } catch (error) {
     console.error(error)
   }
 }
+
+onMounted(() => {
+  getTasks()
+})
 </script>
 
 <template>
