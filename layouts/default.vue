@@ -7,8 +7,12 @@ const navLinks = ref([
     url: '/'
   },
   {
-    label: 'Signup',
-    url: '/signup'
+    label: 'Login',
+    url: '/login'
+  },
+  {
+    label: 'Profile',
+    url: '/profile'
   },
   {
     label: 'TodoMVC',

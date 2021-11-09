@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { createClient } from '@supabase/supabase-js/dist/main/index.js'
 
 const { supabaseUrl, supabasePublicKey } = useRuntimeConfig()
@@ -7,22 +7,22 @@ const { supabaseUrl, supabasePublicKey } = useRuntimeConfig()
 const supabase = createClient(supabaseUrl, supabasePublicKey)
 
 const loginState = reactive({
-  email: '',
-  password: '',
-  user: null,
-  error: null
+  email: ''
 })
 
-const signUp = async () => {
-  let { user, error } = await supabase.auth.signUp({
-    email: loginState.email,
-    password: loginState.password
-  })
+const loading = ref('')
 
-  loginState.user = user
-  loginState.error = error
-
-  console.log({ loginState })
+const login = async () => {
+  try {
+    loading.value = true
+    const { error } = await supabase.auth.signIn({ email: loginState.email })
+    if (error) throw error
+    alert('Check email for login link')
+  } catch (error) {
+    alert(error.error_description || error.message)
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
@@ -39,11 +39,7 @@ const signUp = async () => {
       />
     </div>
     <div>
-      <label for="password">Password</label>
-      <input id="password" type="password" v-model="loginState.password" />
-    </div>
-    <div>
-      <button @click="signUp">Sign Up</button>
+      <button @click="login">Login</button>
     </div>
   </form>
 </template>
