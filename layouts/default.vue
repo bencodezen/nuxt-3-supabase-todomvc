@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { store } from '../store.js'
 
 const navLinks = ref([
   {
@@ -19,13 +20,21 @@ const navLinks = ref([
     url: '/todomvc'
   }
 ])
+
+const displayedNavLinks = computed(() => {
+  if (store.user?.aud === 'authenticated') {
+    return navLinks.value.filter(item => item.label !== 'Login')
+  } else {
+    return navLinks.value.filter(item => item.label !== 'Profile')
+  }
+})
 </script>
 
 <template>
   <main>
     <nav>
       <ul class="nav-list">
-        <li v-for="navItem in navLinks" :key="navItem.url">
+        <li v-for="navItem in displayedNavLinks" :key="navItem.url">
           <nuxt-link :to="navItem.url">{{ navItem.label }}</nuxt-link>
         </li>
       </ul>
